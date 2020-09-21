@@ -9,9 +9,9 @@ Supports:
 - [x] AWS ([source](https://ip-ranges.amazonaws.com/ip-ranges.json)) 
 - [x] Azure ([source](https://www.microsoft.com/en-us/download/confirmation.aspx?id=56519))
 - [x] Google Cloud Platform ([source](https://www.gstatic.com/ipranges/cloud.json))
-- [ ] Alibaba Cloud (provider currently doesn't publish lists)
+- [ ] Alibaba Cloud (currently doesn't publish lists)
 - [x] Oracle Cloud Infrastructure ([source](https://docs.cloud.oracle.com/en-us/iaas/tools/public_ip_ranges.json))
-- [ ] IBM Cloud (provider currently doesn't publish lists)
+- [ ] IBM Cloud (currently doesn't publish lists)
 
 This tool is inspired by [Nimbusland](https://gist.github.com/TweekFawkes/ff83fe294f82f6d73c3ad14697e43ad5) by [Bryce Kunz](http://www.brycekunz.com/).
 
