@@ -5,7 +5,8 @@ import requests
 from netaddr import IPNetwork, IPAddress
 import json
 from lxml import html
-import coloredlogs, logging
+import coloredlogs
+import logging
 
 
 def match_aws(target_ip):
@@ -89,14 +90,19 @@ logger = logging.getLogger(__name__)
 coloredlogs.install(level='info')
 
 if __name__ == "__main__":
-    logger.info('Starting')
+    parser = ArgumentParser(add_help=True, allow_abbrev=False)
 
-    parser = ArgumentParser(add_help=True)
-
+    parser.add_argument('-q', '--quiet', dest='quiet', action='store_true',
+                        help="Suppress logging output")
     parser.add_argument('ip',
                         help="The IP to evaluate, e.g.: 8.8.8.8")
 
     args = parser.parse_args()
+
+    if args.quiet:
+        logger.setLevel('CRITICAL')
+
+    logger.info('Starting')
 
     match_aws(args.ip)
     match_azure(args.ip)
