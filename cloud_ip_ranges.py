@@ -4,6 +4,7 @@ from argparse import ArgumentParser
 import requests
 from netaddr import IPNetwork, IPAddress
 from lxml import html
+import csv
 import coloredlogs
 import logging
 
@@ -103,6 +104,37 @@ def match_oci(target_ip):
     return matched
 
 
+def match_do(target_ip):
+    matched = False
+    try:
+        logger.info('Checking for DigitalOcean')
+
+        # This is the file linked from the digitalocean platform documentation website:
+        # https://www.digitalocean.com/docs/platform/
+        do_url = 'http://digitalocean.com/geo/google.csv'
+        do_ips_request = requests.get(do_url, allow_redirects=True)
+
+        do_ips = csv.DictReader(do_ips_request.content.decode('utf-8').splitlines(), fieldnames=[
+            'range', 'country', 'region', 'city', 'postcode'
+        ])
+
+        for item in do_ips:
+            if target_ip in IPNetwork(item['range']):
+                matched = True
+                logger.info('Match for DigitalOcean range "{}", country "{}", state "{}" and address "{} {}"'.format(
+                    item['range'],
+                    item['country'],
+                    item['region'],
+                    item['city'],
+                    item['postcode']
+                ))
+
+    except Exception as e:
+        logger.error('Error: {}'.format(e))
+
+    return matched
+
+
 logger = logging.getLogger(__name__)
 coloredlogs.install(level='info')
 
@@ -127,7 +159,8 @@ if __name__ == "__main__":
         match_aws(target_ip),
         match_azure(target_ip),
         match_gcp(target_ip),
-        match_oci(target_ip)
+        match_oci(target_ip),
+        match_do(target_ip)
     ]
 
     logger.info('Done')
