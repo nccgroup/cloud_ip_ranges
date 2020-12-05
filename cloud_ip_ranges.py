@@ -19,14 +19,11 @@ def match_aws(target_ip):
         for item in aws_ips["prefixes"]:
             if target_ip in IPNetwork(str(item["ip_prefix"])):
                 matched = True
-                logger.info('Match for AWS range "{}", region "{}" and service "{}"'.format(
-                    item['ip_prefix'],
-                    item['region'],
-                    item['service']
-                ))
+                logger.info(f'Match for AWS range '
+                            f'"{item["ip_prefix"]}", region "{item["region"]}" and service "{item["service"]}"')
 
     except Exception as e:
-        logger.error('Error: {}'.format(e))
+        logger.error(f'Error: {e}')
 
     return matched
 
@@ -47,14 +44,11 @@ def match_azure(target_ip):
             for prefix in item["properties"]['addressPrefixes']:
                 if target_ip in IPNetwork(str(prefix)):
                     matched = True
-                    logger.info('Match for Azure range "{}", region "{}" and service "{}"'.format(
-                        prefix,
-                        item["properties"]["region"],
-                        item["properties"]["systemService"]
-                    ))
+                    logger.info(f'Match for Azure range "{prefix}", region "{item["properties"]["region"]}" and '
+                                f'service "{item["properties"]["systemService"]}"')
 
     except Exception as e:
-        logger.error('Error: {}'.format(e))
+        logger.error(f'Error: {e}')
 
     return matched
 
@@ -69,14 +63,11 @@ def match_gcp(target_ip):
         for item in gcp_ips["prefixes"]:
             if target_ip in IPNetwork(str(item.get("ipv4Prefix", item.get("ipv6Prefix")))):
                 matched = True
-                logger.info('Match for GCP range "{}", region "{}" and service "{}"'.format(
-                    item.get("ipv4Prefix", item.get("ipv6Prefix")),
-                    item['scope'],
-                    item['service']
-                ))
+                logger.info(f'Match for GCP range "{item.get("ipv4Prefix", item.get("ipv6Prefix"))}", '
+                            f'region "{item["scope"]}" and service "{item["service"]}"')
 
     except Exception as e:
-        logger.error('Error: {}'.format(e))
+        logger.error(f'Error: {e}')
 
     return matched
 
@@ -92,14 +83,11 @@ def match_oci(target_ip):
             for cidr_item in region['cidrs']:
                 if target_ip in IPNetwork(str(cidr_item["cidr"])):
                     matched = True
-                    logger.info('Match for OCI range "{}", region "{}" and service "{}"'.format(
-                        cidr_item['cidr'],
-                        region['region'],
-                        cidr_item["tags"][-1]
-                    ))
+                    logger.info(f'Match for OCI range "{cidr_item["cidr"]}", region "{region["region"]}" and '
+                                f'service "{cidr_item["tags"][-1]}"')
 
     except Exception as e:
-        logger.error('Error: {}'.format(e))
+        logger.error(f'Error: {e}')
 
     return matched
 
@@ -121,16 +109,11 @@ def match_do(target_ip):
         for item in do_ips:
             if target_ip in IPNetwork(item['range']):
                 matched = True
-                logger.info('Match for DigitalOcean range "{}", country "{}", state "{}" and address "{} {}"'.format(
-                    item['range'],
-                    item['country'],
-                    item['region'],
-                    item['city'],
-                    item['postcode']
-                ))
+                logger.info(f'Match for DigitalOcean range "{item["range"]}", country "{item["country"]}", '
+                            f'state "{item["region"]}" and address "{item["city"]} {item["postcode"]}"')
 
     except Exception as e:
-        logger.error('Error: {}'.format(e))
+        logger.error(f'Error: {e}')
 
     return matched
 
@@ -153,7 +136,7 @@ if __name__ == "__main__":
 
     target_ip = IPAddress(args.ip)
 
-    logger.info('Starting IP check for: {}'.format(target_ip))
+    logger.info(f'Starting IP check for: {target_ip}')
 
     matches = [
         match_aws(target_ip),
