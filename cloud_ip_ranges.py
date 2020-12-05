@@ -10,6 +10,7 @@ import logging
 
 
 def match_aws(target_ip):
+    matched = False
     try:
         logger.info('Checking for AWS')
         aws_url = 'https://ip-ranges.amazonaws.com/ip-ranges.json'
@@ -17,6 +18,7 @@ def match_aws(target_ip):
 
         for item in aws_ips["prefixes"]:
             if IPAddress(target_ip) in IPNetwork(str(item["ip_prefix"])):
+                matched = True
                 logger.info('Match for AWS range "{}", region "{}" and service "{}"'.format(item['ip_prefix'],
                                                                                             item['region'],
                                                                                             item['service']))
@@ -24,8 +26,10 @@ def match_aws(target_ip):
     except Exception as e:
         logger.error('Error: {}'.format(e))
 
+    return matched
 
 def match_azure(target_ip):
+    matched = False
     try:
         logger.info('Checking for Azure')
         azure_url = 'https://www.microsoft.com/en-us/download/confirmation.aspx?id=56519'
@@ -40,6 +44,7 @@ def match_azure(target_ip):
         for item in azure_ips["values"]:
             for prefix in item["properties"]['addressPrefixes']:
                 if IPAddress(target_ip) in IPNetwork(str(prefix)):
+                    matched = True
                     logger.info('Match for Azure range "{}", region "{}" and service "{}"'.format(prefix,
                                                                                                   item["properties"][
                                                                                                       "region"],
@@ -49,8 +54,10 @@ def match_azure(target_ip):
     except Exception as e:
         logger.error('Error: {}'.format(e))
 
+    return matched
 
 def match_gcp(target_ip):
+    matched = False
     try:
         logger.info('Checking for GCP')
         gcp_url = 'https://www.gstatic.com/ipranges/cloud.json'
@@ -59,6 +66,7 @@ def match_gcp(target_ip):
         for item in gcp_ips["prefixes"]:
             if IPAddress(target_ip) in IPNetwork(str(item.get("ipv4Prefix", item.get("ipv6Prefix")))):
                 # return [target_ip, str(item["ipv4Prefix"]), str(item["scope"]), 'GCP', str(item["service"])]
+                matched = True
                 logger.info('Match for GCP range "{}", region "{}" and service "{}"'.format(
                     item.get("ipv4Prefix", item.get("ipv6Prefix")),
                     item['scope'],
@@ -67,8 +75,10 @@ def match_gcp(target_ip):
     except Exception as e:
         logger.error('Error: {}'.format(e))
 
+    return matched
 
 def match_oci(target_ip):
+    matched = False
     try:
         logger.info('Checking for OCI')
         oci_url = 'https://docs.cloud.oracle.com/en-us/iaas/tools/public_ip_ranges.json'
@@ -78,6 +88,7 @@ def match_oci(target_ip):
             for cidr_item in region['cidrs']:
                 if IPAddress(target_ip) in IPNetwork(str(cidr_item["cidr"])):
                     # return [target_ip, str(cidr_item["cidr"]), str(region['region']), 'OCI', str(cidr_item["tags"][-1])]
+                    matched = True
                     logger.info('Match for OCI range "{}", region "{}" and service "{}"'.format(cidr_item['cidr'],
                                                                                                 region['region'],
                                                                                                 cidr_item["tags"][-1]))
@@ -85,6 +96,7 @@ def match_oci(target_ip):
     except Exception as e:
         logger.error('Error: {}'.format(e))
 
+    return matched
 
 logger = logging.getLogger(__name__)
 coloredlogs.install(level='info')
@@ -104,9 +116,16 @@ if __name__ == "__main__":
 
     logger.info('Starting')
 
-    match_aws(args.ip)
-    match_azure(args.ip)
-    match_gcp(args.ip)
-    match_oci(args.ip)
+    matches = [
+        match_aws(args.ip),
+        match_azure(args.ip),
+        match_gcp(args.ip),
+        match_oci(args.ip)
+    ]
 
     logger.info('Done')
+
+    if any(matches):
+        exit(1)
+    else:
+        exit(0)
