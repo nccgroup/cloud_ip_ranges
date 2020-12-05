@@ -12,6 +12,7 @@ Supports:
 - [ ] Alibaba Cloud (currently doesn't publish lists)
 - [x] Oracle Cloud Infrastructure ([source](https://docs.cloud.oracle.com/en-us/iaas/tools/public_ip_ranges.json))
 - [ ] IBM Cloud (currently doesn't publish lists)
+- [x] DigitalOcean ([source](http://digitalocean.com/geo/google.csv))
 
 This tool is inspired by [Nimbusland](https://gist.github.com/TweekFawkes/ff83fe294f82f6d73c3ad14697e43ad5) by [Bryce Kunz](http://www.brycekunz.com/).
 
@@ -30,13 +31,14 @@ Run the tool:
 ```shell script
 $ python cloud_ip_ranges.py -h
 
-usage: cloud_ip_ranges.py [-h] ip
+usage: cloud_ip_ranges.py [-h] [-q] ip
 
 positional arguments:
-  ip          The IP to evaluate, e.g.: 8.8.8.8
+  ip           The IP to evaluate, e.g.: 8.8.8.8
 
 optional arguments:
-  -h, --help  show this help message and exit
+  -h, --help   show this help message and exit
+  -q, --quiet  Suppress logging output
 
 $ python cloud_ip_ranges.py 52.4.0.0
 
