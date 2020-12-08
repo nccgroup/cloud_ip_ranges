@@ -18,7 +18,14 @@ This tool is inspired by [Nimbusland](https://gist.github.com/TweekFawkes/ff83fe
 
 ## Usage
 
-Setup a virtual environment and install dependencies:
+The preferred installation method is with [`pipx`](https://pipxproject.github.io/pipx/):
+
+```shell script
+$ pipx install https://github.com/nccgroup/cloud_ip_ranges
+$ cloud_ip_ranges
+```
+
+Alternatively, you can setup a virtual environment and install dependencies:
 
 ```shell script
 $ virtualenv -p python3 venv
@@ -29,9 +36,9 @@ $ pip -r requirements.txt
 Run the tool:
 
 ```shell script
-$ python cloud_ip_ranges.py -h
+$ cloud_ip_ranges -h
 
-usage: cloud_ip_ranges.py [-h] [-q] ip
+usage: cloud_ip_ranges [-h] [-q] ip
 
 positional arguments:
   ip           The IP to evaluate, e.g.: 8.8.8.8
@@ -40,7 +47,7 @@ optional arguments:
   -h, --help   show this help message and exit
   -q, --quiet  Suppress logging output
 
-$ python cloud_ip_ranges.py 52.4.0.0
+$ cloud_ip_ranges 52.4.0.0
 
 2020-09-18 17:38:42 host __main__[21549] INFO Starting
 2020-09-18 17:38:42 host __main__[21549] INFO Checking for AWS

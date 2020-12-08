@@ -121,7 +121,7 @@ def match_do(target_ip):
 logger = logging.getLogger(__name__)
 coloredlogs.install(level='info')
 
-if __name__ == "__main__":
+def main():
     parser = ArgumentParser(add_help=True, allow_abbrev=False)
 
     parser.add_argument('-q', '--quiet', dest='quiet', action='store_true',
@@ -152,3 +152,6 @@ if __name__ == "__main__":
         exit(1)
     else:
         exit(0)
+
+if __name__ == "__main__":
+    main()
