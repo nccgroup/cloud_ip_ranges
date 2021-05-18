@@ -1,4 +1,4 @@
 requests==2.24.0
 netaddr==0.8.0
-lxml==4.5.2
+lxml==4.6.3
 coloredlogs==14.0
