@@ -15,13 +15,17 @@ def match_aws(target_ip):
         logger.info('Checking for AWS')
         aws_url = 'https://ip-ranges.amazonaws.com/ip-ranges.json'
         aws_ips = requests.get(aws_url, allow_redirects=True).json()
-
-        for item in aws_ips["prefixes"]:
-            if target_ip in IPNetwork(str(item["ip_prefix"])):
+        for ipv4 in aws_ips["prefixes"]:
+            if target_ip in IPNetwork(str(ipv4["ip_prefix"])):
                 matched = True
                 logger.info(f'Match for AWS range '
-                            f'"{item["ip_prefix"]}", region "{item["region"]}" and service "{item["service"]}"')
+                            f'"{ipv4["ip_prefix"]}", region "{ipv4["region"]}" and service "{ipv4["service"]}"')
 
+        for ipv6 in aws_ips["ipv6_prefixes"]:
+            if target_ip in IPNetwork(str(ipv6["ipv6_prefix"])):
+                matched = True
+                logger.info(f'Match for AWS range '
+                            f'"{ipv6["ipv6_prefix"]}", region "{ipv6["region"]}" and service "{ipv6["service"]}"')
     except Exception as e:
         logger.error(f'Error: {e}')
 
